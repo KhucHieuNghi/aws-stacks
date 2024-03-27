@@ -39,6 +39,15 @@ class QuokkakitStack(Stack):
             partition_key=dynamodb_.Attribute(name="timestamp", type=dynamodb_.AttributeType.NUMBER)
         )
 
+        note_table.add_global_secondary_index(
+            index_name="src_idx",
+            partition_key=dynamodb_.Attribute(name="src", type=dynamodb_.AttributeType.STRING),
+            sort_key=dynamodb_.Attribute(
+                name="timestamp",
+                type=dynamodb_.AttributeType.NUMBER
+            )
+        )
+
         note_lambda = lambda_.Function(self, "noteItemsLambda",
                                                 function_name='noteItemsLambda',
                                                 runtime=lambda_.Runtime.PYTHON_3_9,

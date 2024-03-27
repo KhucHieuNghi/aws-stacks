@@ -12,8 +12,10 @@ TABLE_NAME = os.environ['NoteItemsTable']
 
 def lambda_handler(event = {}, context = {}):
 
-    payload = dict(event)
-
+    payloadstr = dict(event).get('body', dict())
+    
+    payload = json.loads(payloadstr)
+    
     body = payload.get('body', dict())
 
     query = payload.get('query', dict());
@@ -29,25 +31,19 @@ def lambda_handler(event = {}, context = {}):
 
         data = []
 
-        if  username == None: data = scanAllPagination(page, table)
-        else: data = queryPaginationByUsername(page, username, table)
-
-        return {
-            'statusCode': 200,
-            "data": data
-        }
+        if bool(username): data = queryPaginationByUsername(page, username, table)
+        else: data = scanAllPagination(page, table)
+        
+        return {"data": data, "httpCode": 200}
 
     if body == None: raise Exception("Body empty");
 
-    if  body.get('content', None) == None or body.get('username', None) == None:
+    if  not bool(body.get('content', None)) or not bool(body.get('username', None)):
             raise Exception("Method POST, Body missing fields")
 
     if method == 'POST':
         item = putNoteItem(body, table)
-
-        return {
-            'statusCode': 200,
-            'data': json.dumps(item, indent=4, cls=DecimalEncoder)
-        }
+        
+        return {"httpCode": 200, "data": item}
     
     raise Exception("Nothing")

@@ -28,12 +28,14 @@ def scanAllPagination(page = 1, table:any = None):
 
     remain_page = page
     result = [];
-    scan_kwargs = {
-                "IndexName": 'timestamp_idx',
-                "Limit": pagesize,
-            }
 
-            
+    scan_kwargs = {
+        "IndexName": 'src_idx',
+        "Limit": pagesize,
+        "KeyConditionExpression": Key('src').eq('QUOKKA'),
+        "ScanIndexForward": False,
+    }
+
     try:
         done = False
         start_key = None
@@ -41,7 +43,7 @@ def scanAllPagination(page = 1, table:any = None):
             if start_key:
                 scan_kwargs["ExclusiveStartKey"] = start_key
 
-            response = table.scan(**scan_kwargs)
+            response = table.query(**scan_kwargs)
             start_key = response.get("LastEvaluatedKey", None)
             done = start_key is None
             
@@ -94,12 +96,13 @@ def queryPaginationByUsername(page = 1, username: str = '' ,table:any = None):
     return result
 
 def putNoteItem(item:any, table:any):
-    return table.put_item(
-            Item={
+    payload = {
                 'id': str(uuid.uuid4()),
                 'content': item.get('content', '---'),
                 'timestamp': int(datetime.utcnow().timestamp()),
-                'username': item.get('username', 'empty')
+                'username': item.get('username', 'empty'),
+                'src': 'QUOKKA'
             }
-        )
+    table.put_item(Item=payload);
+    return payload;
         
