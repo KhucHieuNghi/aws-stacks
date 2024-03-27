@@ -1,7 +1,7 @@
 # Quokka Test
 
 ## Video demo
-    attached in github
+    attached in github demo.mov
 
 ## Stacks
     aws-stacks: Lambda, Dynamodb, Cloudwatch
