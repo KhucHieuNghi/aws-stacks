@@ -27,7 +27,9 @@ jobs:
           # install your Python dependencies here
           npm install -g aws-cdk
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@master
+        uses: aws-actions/configure-aws-credentials@v4
+      - name: test
+        run: echo " ${{ secrets.AWS_SECRET_ACCESS_KEY }} ""
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
