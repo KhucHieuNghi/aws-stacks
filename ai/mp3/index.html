@@ -1,0 +1,157 @@
+<!-- <!DOCTYPE html> -->
+<html>
+  <head>
+    <title>Quokka HT2 paly</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <form id="searchMp3">
+      <div class="ml-6 mt-10"><b>Search File Text-to-Speech</b></div>
+      <div class="gap-6 m-6">
+        <div class="mb-6 flex items-center">
+          <input
+            type="text"
+            id="file"
+            style="width: 200px"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Input file name"
+            required
+          />
+          <span class="ml-2">.mp3</span>
+        </div>
+        <div>
+          <button
+            type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+    <audio class="m-4" id="audio" controls></audio>
+
+    <form id="genMp3">
+      <div class="ml-6"><b>Generate Text-to-Speech</b></div>
+      <div class="gap-6 m-6">
+        <div class="mb-6 flex">
+          <input
+            type="number"
+            id="speed"
+            style="width: 100px; height: 40px"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="speed"
+            value="1"
+            step="0.1"
+            required
+          />
+          <select name="emotion" id="emotion" class="ml-4">
+            <option value="" selected disabled hidden>Emotion</option>
+            <option value="female_happy">Female Happy</option>
+            <option value="female_sad">Female Sad</option>
+            <option value="female_angry">Female Angry</option>
+            <option value="female_disgust">Female Disgust</option>
+            <option value="female_fearful">Female Fearful</option>
+            <option value="female_surprised">Female Surprised</option>
+
+            <option value="male_happy">Male Happy</option>
+            <option value="male_sad">Male Sad</option>
+            <option value="male_angry">Male Angry</option>
+            <option value="male_fearful">Male Disgust</option>
+            <option value="male_disgust">Male Fearful</option>
+            <option value="male_surprised">Male Surprised</option>
+          </select>
+        </div>
+        <div class="mb-6 flex">
+          <textarea
+            type="text"
+            id="text"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            placeholder="Input generate text"
+            required
+          ></textarea>
+        </div>
+        <div>
+          <div class="my-4">
+            <span id="status" class="text-sm text-gray-500"
+              >* Maximum 500 characters</span
+            >
+          </div>
+          <button
+            id="submit"
+            type="submit"
+            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+          >
+            <svg
+              id="loading"
+              aria-hidden="true"
+              role="status"
+              style="display: none"
+              class="inline w-4 h-4 me-3 text-white animate-spin"
+              viewBox="0 0 100 101"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="#E5E7EB"
+              />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentColor"
+              />
+            </svg>
+            Search
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <script>
+      var domainEndpoint = "http://localhost:3000/mp3/"
+      document
+        .getElementById("searchMp3")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          var name = document.getElementById("file").value;
+          document.getElementById("audio").src =
+            domainEndpoint + name + ".mp3";
+        });
+
+      document
+        .getElementById("genMp3")
+        .addEventListener("submit", function (event) {
+          event.preventDefault();
+          var name = document.getElementById("text").value;
+          var speed = document.getElementById("speed").value;
+          var emotion = document.getElementById('emotion').value;
+          document.getElementById("loading").style.display = "inline-block";
+          document.getElementById("submit").disabled = true;
+
+          fetch(domainEndpoint, {
+            method: "POST",
+            body: JSON.stringify({ text: name, speed: Number(speed), emotion }),
+            headers: {
+              "accept": "*/*",
+              "accept-language": "en-US,en;q=0.9",
+              "content-type": "application/json",
+            },
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("data", data);
+              document.getElementById("status").innerHTML =
+                JSON.stringify(data);
+              document.getElementById("audio").src =
+                  domainEndpoint + data.file;
+            })
+            .finally(() => {
+              document.getElementById("loading").style.display = "none";
+              document.getElementById("submit").disabled = false;
+            });
+        });
+    </script>
+  </body>
+</html>

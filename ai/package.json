@@ -1,0 +1,17 @@
+{
+  "name": "qcbackend",
+  "version": "1.0.0",
+  "description": "- [1. prepair environment for deployment](#1-prepair-environment-for-deployment)   - [1.1. install terraform cli](#11-install-terraform-cli)   - [1.2. install aws cli](#12-install-aws-cli)   - [1.3. setup aws credentials](#13-setup-aws-credentials) - [2. setup aws resources](#2-setup-aws-resources)   - [2.1. bootstrap dynamodb](#21-bootstrap-dynamodb)   - [2.2. setup domain for api gateway](#22-setup-domain-for-api-gateway)   - [2.3. create cognito and setup domain for cognito](#23-create-cognito-and-setup-domain-for-cognito)   - [2.4. setup aws credentials for bitbucket pipeline](#24-setup-aws-credentials-for-bitbucket-pipeline)   - [2.5. setup environment variables for bitbucket pipeline](#25-setup-environment-variables-for-bitbucket-pipeline)   - [2.6. Create s3 bucket for terraform](#26-create-s3-bucket-for-terraform) - [3. Setup public s3 bucket for image services](#3-setup-public-s3-bucket-for-image-services) - [4. Deploy and test on local](#4-deploy-and-test-on-local)",
+  "main": "index.mjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2"
+  }
+}
