@@ -9,6 +9,8 @@
   <body>
     <form id="searchMp3">
       <div class="ml-6 mt-10"><b>Search File Text-to-Speech</b></div>
+      <div class="gap-6 m-6" id="files">
+      </div>
       <div class="gap-6 m-6">
         <div class="mb-6 flex items-center">
           <input
@@ -37,16 +39,32 @@
       <div class="ml-6"><b>Generate Text-to-Speech</b></div>
       <div class="gap-6 m-6">
         <div class="mb-6 flex">
-          <input
-            type="number"
-            id="speed"
-            style="width: 100px; height: 40px"
-            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="speed"
-            value="1"
-            step="0.1"
-            required
-          />
+          <div class="flex items-center justify-center mr-6">
+            <label class="mr-4">File Name: </label>
+            <input
+              type="text"
+              id="name"
+              style="width: 200px; height: 40px"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Input file name"
+              value=""
+              step="0.1"
+              required
+            />
+          </div>
+          <div class="flex items-center justify-center">
+            <label class="mr-4">Speed: </label>
+            <input
+              type="number"
+              id="speed"
+              style="width: 100px; height: 40px"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="speed"
+              value="1"
+              step="0.1"
+              required
+            />
+          </div>
           <select name="emotion" id="emotion" class="ml-4">
             <option value="" selected disabled hidden>Emotion</option>
             <option value="female_happy">Female Happy</option>
@@ -103,21 +121,39 @@
                 fill="currentColor"
               />
             </svg>
-            Search
+            Generate
           </button>
         </div>
       </div>
     </form>
 
     <script>
-      var domainEndpoint = "https://aws-stacks.onrender.com/mp3/"
+      var domainEndpoint = "https://aws-stacks.onrender.com/mp3/";
+      var origin = "https://aws-stacks.onrender.com";
+
+      (() => {
+        fetch(origin, {
+            method: "get",
+            headers: {
+              accept: "*/*",
+              "accept-language": "en-US,en;q=0.9",
+              "content-type": "application/json",
+            },
+          })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("data", data);
+            document.getElementById("files").innerHTML = data.files.join(', ');
+          })
+          .finally(() => {
+          });
+      })()
       document
         .getElementById("searchMp3")
         .addEventListener("submit", function (event) {
           event.preventDefault();
           var name = document.getElementById("file").value;
-          document.getElementById("audio").src =
-            domainEndpoint + name + ".mp3";
+          document.getElementById("audio").src = domainEndpoint + name + ".mp3";
         });
 
       document
@@ -126,15 +162,16 @@
           event.preventDefault();
           var name = document.getElementById("text").value;
           var speed = document.getElementById("speed").value;
-          var emotion = document.getElementById('emotion').value;
+          var emotion = document.getElementById("emotion").value;
+          var file = document.getElementById("name").value;
           document.getElementById("loading").style.display = "inline-block";
           document.getElementById("submit").disabled = true;
 
           fetch(domainEndpoint, {
             method: "POST",
-            body: JSON.stringify({ text: name, speed: Number(speed), emotion }),
+            body: JSON.stringify({ text, speed: Number(speed), emotion, file }),
             headers: {
-              "accept": "*/*",
+              accept: "*/*",
               "accept-language": "en-US,en;q=0.9",
               "content-type": "application/json",
             },
@@ -144,12 +181,28 @@
               console.log("data", data);
               document.getElementById("status").innerHTML =
                 JSON.stringify(data);
-              document.getElementById("audio").src =
-                  domainEndpoint + data.file;
+              document.getElementById("audio").src = domainEndpoint + data.file;
             })
             .finally(() => {
               document.getElementById("loading").style.display = "none";
               document.getElementById("submit").disabled = false;
+
+
+              fetch(origin, {
+                method: "get",
+                headers: {
+                  accept: "*/*",
+                  "accept-language": "en-US,en;q=0.9",
+                  "content-type": "application/json",
+                },
+              })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("data", data);
+                document.getElementById("files").innerHTML = data.files.join(', ');
+              })
+              .finally(() => {
+              });
             });
         });
     </script>
